@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant</title>
+    {% load static %}
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --primary-hover: #2a75f3;
+            --recording-color: #ea4335;
+            --text-color: #333;
+            --light-bg: #f5f5f5;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            margin: 0;
+            background-color: var(--light-bg);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .logout-panel {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            z-index: 10;
+        }
+        
+        .logout-btn {
+            padding: 8px 16px;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 20px;
+            color: var(--white);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logout-btn:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.05);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* Custom microphone styling */
+        .microphone-container {
+            position: relative;
+            width: 200px;
+            height: 240px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+        
+        .microphone-img {
+            width: 250px;
+            height: 250px;
+            margin-right: 100px;
+            margin-bottom: 100px;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s;
+        }
+        
+        .microphone-container:hover .microphone-img {
+            transform: scale(1.03);
+        }
+        
+        /* Left waves */
+        .left-waves {
+            position: absolute;
+            left: -10px;
+            top: 40px;
+            display: flex;
+            flex-direction: column;
+            height: 80px;
+            justify-content: space-evenly;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .left-waves.active {
+            opacity: 1;
+        }
+        
+        .left-wave {
+            width: 60px;
+            height: 4px;
+            background-color: #ea4335;
+            border-radius: 2px;
+            transform-origin: left;
+            animation: wave-pulse 1.2s infinite;
+        }
+        
+        .left-wave:nth-child(1) { animation-delay: 0.1s; }
+        .left-wave:nth-child(2) { animation-delay: 0.3s; width: 15px; }
+        .left-wave:nth-child(3) { animation-delay: 0.5s; width: 20px; }
+        
+        /* Right waves */
+        .right-waves {
+            position: absolute;
+            right: -30px;
+            top: 40px;
+            display: flex;
+            flex-direction: column;
+            height: 80px;
+            justify-content: space-evenly;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .right-waves.active {
+            opacity: 1;
+        }
+        
+        .right-wave {
+            width: 50px;
+            height: 4px;
+            background-color: #ea4335;
+            border-radius: 2px;
+            transform-origin: right;
+            animation: wave-pulse 1.2s infinite;
+        }
+        
+        .right-wave:nth-child(1) { animation-delay: 0.4s; width: 20px; }
+        .right-wave:nth-child(2) { animation-delay: 0.2s; }
+        .right-wave:nth-child(3) { animation-delay: 0s; width: 15px; }
+        
+        @keyframes wave-pulse {
+            0%, 100% {
+                transform: scaleX(0.8);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Recording indicator */
+        .recording-indicator {
+            position: absolute;
+            bottom: 50px;
+            right: 60px;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background-color: #ea4335;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 0 10px rgba(234, 67, 53, 0.5);
+        }
+        
+        .recording-indicator.active {
+            opacity: 1;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        
+        .response-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-height: 100px;
+            width: 80%;
+            max-width: 500px;
+            text-align: left;
+            transition: all 0.3s;
+        }
+        
+        .response-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        
+        #transcript, #response {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        #transcript {
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop muted playsinline style="position: absolute; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; opacity: 0.6;">
+        <source src="{% static 'assets/original-8756520addebb083fa58bb3cbe6744b7.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <div class="logout-panel">
+        <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+    
+    <div class="container">
+        <div id="mic-button" class="microphone-container">
+            <img src="{% static 'assets/AI Voice.png' %}" alt="Microphone" class="microphone-img">
+            <div class="left-waves" id="left-waves">
+                <div class="left-wave"></div>
+                <div class="left-wave"></div>
+                <div class="left-wave"></div>
+            </div>
+            <div class="right-waves" id="right-waves">
+                <div class="right-wave"></div>
+                <div class="right-wave"></div>
+                <div class="right-wave"></div>
+            </div>
+            <div class="recording-indicator" id="recording-indicator"></div>
+        </div>
+        
+        <div class="response-container">
+            <div class="response-title">Conversation</div>
+            <p id="transcript"></p>
+            <p id="response"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const micButton = document.getElementById('mic-button');
+            const leftWaves = document.getElementById('left-waves');
+            const rightWaves = document.getElementById('right-waves');
+            const recordingIndicator = document.getElementById('recording-indicator');
+            const transcriptElement = document.getElementById('transcript');
+            const responseElement = document.getElementById('response');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            let recognition;
+            let isRecording = false;
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', () => {
+                // Redirect to logout URL
+                window.location.href = '/logout/'; // Change this to your actual logout URL
+            });
+            
+            // Check if browser supports SpeechRecognition
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                // Initialize speech recognition
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                
+                // Handle results
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    let finalTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+                    
+                    if (finalTranscript) {
+                        transcriptElement.textContent = `You said: ${finalTranscript}`;
+                        // Send to server
+                        sendToServer(finalTranscript);
+                    } else {
+                        transcriptElement.textContent = `You said: ${interimTranscript}`;
+                    }
+                };
+                
+                // Handle errors
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error', event.error);
+                    stopRecording();
+                };
+                
+                // Start/stop recording on button click
+                micButton.addEventListener('click', toggleRecording);
+            } else {
+                micButton.style.cursor = 'not-allowed';
+                micButton.style.opacity = '0.7';
+                responseElement.textContent = 'Speech recognition is not supported in your browser.';
+            }
+            
+            function toggleRecording() {
+                if (isRecording) {
+                    stopRecording();
+                } else {
+                    startRecording();
+                }
+            }
+            
+            function startRecording() {
+                isRecording = true;
+                leftWaves.classList.add('active');
+                rightWaves.classList.add('active');
+                recordingIndicator.classList.add('active');
+                transcriptElement.textContent = 'Listening...';
+                responseElement.textContent = '';
+                
+                recognition.start();
+            }
+            
+            function stopRecording() {
+                isRecording = false;
+                leftWaves.classList.remove('active');
+                rightWaves.classList.remove('active');
+                recordingIndicator.classList.remove('active');
+                
+                if (recognition) {
+                    recognition.stop();
+                }
+            }
+            
+            function sendToServer(transcript) {
+                fetch('/process_voice/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({ transcript: transcript })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.response) {
+                        responseElement.textContent = data.response;
+                        // Optional: Use speech synthesis to speak the response
+                        speakResponse(data.response);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    responseElement.textContent = 'Error processing your request.';
+                });
+            }
+            
+            function speakResponse(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+            
+            function getCsrfToken() {
+                // Get CSRF token from cookie
+                const cookieValue = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('csrftoken='))
+                    ?.split('=')[1];
+                return cookieValue || '';
+            }
+        });
+
+        function speak(text) {
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = "en-US"; // Change language if needed
+            speech.rate = 2; // Adjust speed (1 is normal)
+            speech.pitch = 1; // Adjust pitch
+            window.speechSynthesis.speak(speech);
+        }
+
+        // Text to be spoken when the page loads
+        window.onload = function() {
+            const introText = "Allow me to introduce myself. I am Nova, a virtual artificial intelligence. I am here to assist you with a variety of tasks to the best of my ability, 24 hours a day, 7 days a week. Systems are now fully operational. Please Click on Mike to begin.";
+            speak(introText);
+        };
+    </script>
+</body>
+</html>

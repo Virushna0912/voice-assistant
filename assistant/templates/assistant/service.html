@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - Services</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #000000;
+            --background-color: #ffffff;
+            --accent-color: #000000;
+            --hover-color: #005ba1;
+            --gray-light: #f5f5f7;
+            --gray-medium: #86868b;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        header {
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fafafa 0%, #f2f2f2 100%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .header-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+            background: linear-gradient(to right, #000000, #333333);
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s infinite;
+        }
+        
+        .header-content p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--gray-medium);
+        }
+        
+        /* Services Section */
+        .services-container {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .services-intro {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .services-intro h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .services-intro h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .services-intro p {
+            font-size: 1.2rem;
+            color: var(--gray-medium);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .service-card {
+            background-color: var(--gray-light);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-color), #000000);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .service-icon-wrapper {
+            background: var(--accent-color);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.5s ease;
+            transform: translateZ(20px);
+            box-shadow: 0 10px 20px rgba(0, 112, 201, 0.2);
+        }
+        
+        .service-card:hover .service-icon-wrapper {
+            transform: translateZ(40px) rotate(360deg);
+        }
+        
+        .service-icon {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+            transform: translateZ(10px);
+        }
+        
+        .service-card:hover .service-title {
+            transform: translateZ(25px);
+        }
+        
+        .service-description {
+            color: var(--gray-medium);
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+            transform: translateZ(5px);
+        }
+        
+        .service-card:hover .service-description {
+            transform: translateZ(15px);
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--gray-light);
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-content p {
+            color: var(--gray-medium);
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -500px 0;
+            }
+            100% {
+                background-position: 500px 0;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .animated-fade {
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .service-card {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        /* Staggered animation delays */
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+        .service-card:nth-child(5) { animation-delay: 0.5s; }
+        .service-card:nth-child(6) { animation-delay: 0.6s; }
+        .service-card:nth-child(7) { animation-delay: 0.7s; }
+        .service-card:nth-child(8) { animation-delay: 0.8s; }
+        .service-card:nth-child(9) { animation-delay: 0.9s; }
+        .service-card:nth-child(10) { animation-delay: 1.0s; }
+        .service-card:nth-child(11) { animation-delay: 1.1s; }
+        .service-card:nth-child(12) { animation-delay: 1.2s; }
+        .service-card:nth-child(13) { animation-delay: 1.3s; }
+        .service-card:nth-child(14) { animation-delay: 1.4s; }
+        .service-card:nth-child(15) { animation-delay: 1.5s; }
+        .service-card:nth-child(16) { animation-delay: 1.6s; }
+        .service-card:nth-child(17) { animation-delay: 1.7s; }
+        .service-card:nth-child(18) { animation-delay: 1.8s; }
+        .service-card:nth-child(19) { animation-delay: 1.9s; }
+        .service-card:nth-child(20) { animation-delay: 2.0s; }
+        .service-card:nth-child(21) { animation-delay: 2.1s; }
+        .service-card:nth-child(22) { animation-delay: 2.2s; }
+        .service-card:nth-child(23) { animation-delay: 2.3s; }
+        .service-card:nth-child(24) { animation-delay: 2.4s; }
+        
+        /* Badge for new features */
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #ff3366, #ff6b6b);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+            transform: translateZ(30px);
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.3);
+        }
+        
+        /* Scrolling animation effect */
+        .reveal {
+            opacity: 0;
+            transition: 1s all ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+        }
+        
+        /* Wave effect */
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="1" d="M0,128L48,117.3C96,107,192,85,288,90.7C384,96,480,128,576,154.7C672,181,768,203,864,186.7C960,171,1056,117,1152,101.3C1248,85,1344,107,1392,117.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .services-intro h2 {
+                font-size: 2rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    
+    <!-- Services Section -->
+    <section class="services-container">
+        <div class="services-intro animated-fade">
+            <h2>MY  SERVICES</h2>
+            <p>Discover the wide range of features and capabilities that Nova offers</p>
+        </div>
+        <video autoplay loop muted playsinline style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1;">
+            <source src="{% static 'assets/original-0242acdc69146d4472fc5e69b48616dc.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        
+        <div class="services-grid reveal">
+            <!-- Service 1 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                </div>
+                <span class="badge">Popular</span>
+                <h3 class="service-title">Conversations with Nova</h3>
+                <p class="service-description">Engage in natural, human-like conversations with your AI assistant for a truly interactive experience.</p>
+            </div>
+            
+            <!-- Service 2 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <span class="badge">Live now</span>
+                <h3 class="service-title">Web Search</h3>
+                <p class="service-description">Search Google, YouTube, and Wikipedia with simple voice commands for quick information access.</p>
+            </div>
+            
+            <!-- Service 3 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                </div>
+                <span class="badge">Coming Soon</span>
+                <h3 class="service-title">Temperature Automation</h3>
+                <p class="service-description">Control and monitor temperature settings in your environment automatically.</p>
+            </div>
+            
+            <!-- Service 4 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <h3 class="service-title">Time Automation</h3>
+                <p class="service-description">Get real-time updates and automatic time management features to stay organized.</p>
+            </div>
+            
+            <!-- Service 5 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+                <span class="badge">Popular upcoming</span>
+                <h3 class="service-title">Sending Mail</h3>
+                <p class="service-description">can able to send mail by voice command </p>
+            </div>
+            
+            
+            <!-- Service 6 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                </div>
+                <h3 class="service-title">Voice App Control</h3>
+                <p class="service-description">Open and close applications with just your voice for seamless device interaction.</p>
+            </div>
+            
+            <!-- Service 7 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                </div>
+                <span class="badge">Live now</span>
+                <h3 class="service-title">Voice Alarm</h3>
+                <p class="service-description">Set alarms using natural voice commands for easy scheduling and reminders.</p>
+            </div>
+            
+            <!-- Service 8 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                </div>
+                <span class="badge">Popular</span>
+                <h3 class="service-title">YouTube Control</h3>
+                <p class="service-description">Fully automated YouTube playback controls with voice commands for hands-free entertainment.</p>
+            </div>
+            
+            <!-- Service 9 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                </div>
+                <span class="badge">live now </span>
+                <h3 class="service-title">Remember Function</h3>
+                <p class="service-description">Store and recall important information with Nova's advanced memory capabilities.</p>
+            </div>
+            
+            <!-- Service 10 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                </div>
+                <span class="badge">live now</span>
+                <h3 class="service-title">Playlist Management</h3>
+                <p class="service-description">Create and control music playlists using voice commands for personalized audio experiences.</p>
+            </div>
+            
+            <!-- Service 11 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                </div>
+                <span class="badge">Coming Soon</span>
+                <h3 class="service-title">News Updates</h3>
+                <p class="service-description">Get the latest news updates from trusted sources delivered directly by Nova.</p>
+            </div>
+            
+            <!-- Service 12 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                </div>
+                <span class="badge">New</span>
+                <h3 class="service-title">Voice Calculator</h3>
+                <p class="service-description">Perform calculations with voice commands for quick mathematical solutions.</p>
+            </div>
+            
+            <!-- Service 13 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                </div>
+                <span class="badge">upcoming Premium</span>
+                <h3 class="service-title">WhatsApp Integration</h3>
+                <p class="service-description">Send messages and manage WhatsApp communications using voice commands.</p>
+            </div>
+            
+            <!-- Service 14 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-power-off"></i>
+                    </div>
+                </div>
+                <span class="badge">Premium</span>
+                <h3 class="service-title">System Shutdown</h3>
+                <p class="service-description">Control system power functions with voice commands for convenient device management.</p>
+            </div>
+            
+            <!-- Service 15 -->
+            
+            
+            <!-- Service 16 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <span class="badge">Useful Upcoming</span>
+                <h3 class="service-title">Day Scheduler</h3>
+                <p class="service-description">Organize your daily activities with Nova's smart scheduling capabilities.</p>
+            </div>
+            
+            <!-- Service 17 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                </div>
+                <span class="badge">Live now</span>
+                <h3 class="service-title">Easy App Access</h3>
+                <p class="service-description">Open any application using simple voice commands with an intuitive method.</p>
+            </div>
+            
+            <!-- Service 18 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                </div>
+                <span class="badge">Live now</span>
+                <h3 class="service-title">Internet Speed Check</h3>
+                <p class="service-description">Test your internet connection speed with a simple voice command.</p>
+            </div>
+            
+            <!-- Service 19 -->
+         
+            
+            <!-- Service 20 -->
+           
+            
+            <!-- Service 21 -->
+            
+            
+            <!-- Service 22 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <span class="badge">Live now</span>
+                <h3 class="service-title">Screenshot & Camera</h3>
+                <p class="service-description">Capture screenshots and control your camera with simple voice commands.</p>
+            </div>
+            
+            <!-- Service 23 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                </div>
+                <span class="badge">Live now</span>
+                <h3 class="service-title">Focus Mode</h3>
+                <p class="service-description">Activate a distraction-free environment to enhance productivity and concentration.</p>
+            </div>
+            
+            <!-- Service 24 -->
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <div class="service-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                </div>
+                <span class="badge">Upcoming</span>
+                <h3 class="service-title">Google Translator</h3>
+                <p class="service-description">Translate languages instantly using Nova's integrated Google Translator function.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Nova AI Assistant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation on scroll
+            function reveal() {
+                var reveals = document.querySelectorAll('.reveal');
+                
+                for (var i = 0; i < reveals.length; i++) {
+                    var windowHeight = window.innerHeight;
+                    var elementTop = reveals[i].getBoundingClientRect().top;
+                    var elementVisible = 150;
+                    
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveals[i].classList.add('active');
+                    } else {
+                        reveals[i].classList.remove('active');
+                    }
+                }
+            }
+            
+            window.addEventListener('scroll', reveal);
+            reveal(); // Call once on load
+            
+            // Add 3D effect on mouse move for card hover
+            const cards = document.querySelectorAll('.service-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const angleX = (y - centerY) / 20;
+                    const angleY = (centerX - x) / 20;
+                    
+                    this.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateZ(10px)`;
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+                    setTimeout(() => {
+                        this.style.transition = 'transform 0.3s ease';
+                    }, 100);
+                });
+                
+                card.addEventListener('mouseenter', function() {
+                    this.style.transition = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>  NOVA AI </title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <!-- custom css -->
+    <link rel="stylesheet" href="static/css/main.css" />
+    {% load static %}
+  </head>
+
+  <body>
+    <!-- header design -->
+     <header class="header">
+      <a href="#" class="logo">NOVA</a>
+      <i class='bx bx-menu' id="menu-icon"></i>
+      <nav class="navbar">
+        <a href="#home" class="active">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+      </nav>
+     </header>
+
+    <!-- home section design -->
+     <section class="home" id="home">
+        <div class= "home-content">
+          <h3> Meet Your</h3>
+          <h1> New Personal AI Assistant</h1>
+          <h3>I'm a <span> NOVA</span> </h3>
+          <p> </p>
+          <a href="{% url 'login' %}" class="btn"> EXPLORE NOW </a>
+        </div>
+        <div >
+          <video autoplay loop muted playsinline style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1;">
+            <source src="{% static 'assets/original-0242acdc69146d4472fc5e69b48616dc.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div class="home-img">
+            <img src="{% static 'assets/mike.png' %}" alt="profile">
+          </div>
+
+        </div>
+      </section>
+
+    <!-- about section design -->
+     <section class="about" id="about">
+      <div class="about-img">
+        <img src="{% static 'assets/Chatbot Creating Message (1).png' %}" alt="">
+      </div>
+      <div class="about-content">
+        <h2 class="heading">About <span> Me </span></h2>
+        <h3> I AM AI BASED PERSONAL  VOICE ASSISTANT </h3>
+        <p> </p>
+        <a href="{% url 'about' %}" class="btn"> Read More </a>
+      </div>
+
+    </section>
+
+    <!-- services section design -->
+     <section class="services" id="services">
+      <h2 class="heading"> My <span> Services </span></h2>
+      <div class="services-container">
+        <div class="services-box">
+          <i class='bx bx-code-alt' ></i>
+          <h3> What Can I Do For You? </h3>
+          <div>
+            <img src="{% static 'assets/calculator_12206036.png' %}" alt="">
+
+            <img src="{% static 'assets/email_3694362.png' %}" alt="">
+          
+            <img src="{% static 'assets/excel_732220.png' %}" alt="">
+        
+            <img src="{% static 'assets/spotify_3669986.png' %}" alt="">
+          
+            <img src="{% static 'assets/notepad_2816587.png' %}" alt="">
+          
+            <img src="{% static 'assets/youtube_3938026.png' %}" alt="">
+           </div>
+          <a href="{% url 'service' %}" class="btn">Read More</a>
+        </div>
+          </div>
+        </div>
+      </section>
+
+
+    <!-- contact section design -->
+    <section class="contact" id="contact">
+      <h2 class="heading">Contact <span>Me!</span></h2>
+      <form action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="7918f1a9-bedd-45ea-bbc4-c7b56f1626bb">
+          <div class="input-box">
+              <input type="text" name="name" placeholder="Full Name" required>
+              <input type="email" name="email" placeholder="Email Address" required>
+          </div>
+          <div class="input-box">
+              <input type="number" name="mobile" placeholder="Mobile Number" required>
+              <input type="text" name="subject" placeholder="Email Subject" required>
+          </div>
+          <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
+          <input type="submit" value="Send Message" class="btn">
+      </form>
+  </section>
+  
+
+    <!-- footer design -->
+      <footer class="footer">
+       <div class="footer-text">
+        <p>Copyright & copy  | All Rights Reserved.</p>
+        </div>
+        <div class="footer-iconTop">
+        <a href="#home"><i class='bx bx-up-arrow-alt' ></i></a>
+        </div>
+      </footer>
+
+
+    <!-- scroll reveal -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- typed js -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+    <!-- custom js -->
+    <script src="static/js/main.js"></script>
+  </body>
+</html>
