@@ -11,7 +11,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+import sys
 
+# Only include Windows-specific packages when running on Windows
+if sys.platform == 'win32':
+    # Windows-specific settings and imports
+    pass
+else:
+    # Linux/Render specific settings
+    pass
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xsp8w=4r33okf2v(izgvsci^7hpny&4m3*bg=@q0&(uqjx1h@x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
